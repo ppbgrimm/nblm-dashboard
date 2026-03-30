@@ -33,8 +33,7 @@
         body { 
             font-family: 'Noto Sans Thai', sans-serif; 
             transition: background-color 0.3s, color 0.3s;
-            height: 100vh;
-            overflow: hidden;
+            /* เอา height: 100vh และ overflow: hidden ออกจาก CSS เพื่อไปใช้ Tailwind จัดการแบบ Responsive แทน */
             display: flex;
             flex-direction: column;
         }
@@ -68,7 +67,7 @@
         }
     </style>
 </head>
-<body class="p-4 md:p-6 bg-bgrimm-shade0 dark:bg-gray-950 text-bgrimm-darkGrey dark:text-gray-200">
+<body class="p-4 md:p-6 bg-bgrimm-shade0 dark:bg-gray-950 text-bgrimm-darkGrey dark:text-gray-200 min-h-screen lg:h-screen lg:overflow-hidden">
 
     <div id="details-modal" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 md:p-10 transition-opacity">
         <div class="bg-white dark:bg-gray-900 w-full max-w-7xl max-h-full rounded-2xl flex flex-col shadow-2xl border border-bgrimm-shade1 dark:border-gray-700 overflow-hidden">
@@ -90,35 +89,37 @@
                 </div>
             </div>
             
-            <div class="p-4 md:p-6 overflow-auto flex-grow bg-white dark:bg-gray-900" id="printable-area">
+            <div class="p-4 md:p-6 overflow-x-auto flex-grow bg-white dark:bg-gray-900" id="printable-area">
                 <div id="pdf-header" class="hidden mb-6 text-center">
                     <h1 class="text-2xl font-bold text-bgrimm-darkGrey">The Awakening Hub - Class Report</h1>
                     <p class="text-sm text-bgrimm-lightGrey" id="pdf-timestamp"></p>
                 </div>
                 
-                <table class="w-full text-left">
-                    <thead>
-                        <tr>
-                            <th>เวลา</th>
-                            <th>ชื่อ</th>
-                            <th>คะแนน</th>
-                            <th>ระดับ AI</th>
-                            <th>บ้าน</th>
-                            <th>ใช้ AI บ่อยแค่ไหน</th>
-                            <th>เข้าใจ Source Grounding</th>
-                            <th>วิธีรับมือข้อมูลหนาๆ</th>
-                            <th>บทบาทในทีม</th>
-                            <th>ความคาดหวัง</th>
-                        </tr>
-                    </thead>
-                    <tbody id="full-data-tbody"></tbody>
-                </table>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left">
+                        <thead>
+                            <tr>
+                                <th>เวลา</th>
+                                <th>ชื่อ</th>
+                                <th>คะแนน</th>
+                                <th>ระดับ AI</th>
+                                <th>บ้าน</th>
+                                <th>ใช้ AI บ่อยแค่ไหน</th>
+                                <th>เข้าใจ Source Grounding</th>
+                                <th>วิธีรับมือข้อมูลหนาๆ</th>
+                                <th>บทบาทในทีม</th>
+                                <th>ความคาดหวัง</th>
+                            </tr>
+                        </thead>
+                        <tbody id="full-data-tbody"></tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
 
     <header class="flex flex-col md:flex-row justify-between items-center mb-4 pb-4 border-b border-bgrimm-shade1 dark:border-gray-800 gap-4 shrink-0">
-        <div class="flex items-center gap-3">
+        <div class="flex items-center gap-3 w-full md:w-auto justify-start">
             <span class="relative flex h-3 w-3"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span><span class="relative inline-flex rounded-full h-3 w-3 bg-green-500 shadow-md"></span></span>
             <div>
                 <h1 class="text-2xl font-bold tracking-tight bgrimm-title">The Awakening Hub</h1>
@@ -126,8 +127,8 @@
             </div>
         </div>
         
-        <div class="flex items-center gap-2 md:gap-3 flex-wrap justify-end">
-            <div class="bg-white dark:bg-gray-800 border border-bgrimm-shade1 dark:border-gray-700 rounded-xl py-1 px-4 flex items-center gap-3 shadow-sm mr-2">
+        <div class="flex items-center gap-2 md:gap-3 flex-wrap justify-end w-full md:w-auto">
+            <div class="bg-white dark:bg-gray-800 border border-bgrimm-shade1 dark:border-gray-700 rounded-xl py-1 px-3 md:px-4 flex items-center gap-2 md:gap-3 shadow-sm mr-1 md:mr-2">
                 <p class="text-[10px] text-bgrimm-darkGrey dark:text-gray-400 font-semibold uppercase tracking-widest">Total Synced</p>
                 <span id="total-count" class="text-2xl font-bold text-bgrimm-orange leading-none">0</span>
             </div>
@@ -136,7 +137,7 @@
                 📊 Data
             </button>
             <button onclick="clearAllData()" class="text-xs font-medium bg-white dark:bg-gray-800 border border-bgrimm-shade1 dark:border-gray-700 hover:border-bgrimm-orangeDark text-bgrimm-darkGrey dark:text-gray-300 hover:text-bgrimm-orangeDark py-1.5 px-3 rounded-lg transition-all duration-300">
-                ⚠️ ล้างข้อมูล
+                ⚠️ ล้าง
             </button>
             <button onclick="toggleTheme()" class="p-1.5 rounded-lg bg-white dark:bg-gray-800 shadow-sm text-bgrimm-orange hover:bg-gray-50 transition border border-bgrimm-shade1 dark:border-gray-700">
                 <svg id="theme-icon-dark" class="w-4 h-4 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
@@ -145,10 +146,10 @@
         </div>
     </header>
 
-    <main class="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-6 flex-grow min-h-0">
+    <main class="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-6 flex-grow min-h-0 lg:overflow-hidden pb-4 lg:pb-0">
         
-        <div class="lg:col-span-2 flex flex-col gap-4 lg:gap-6 min-h-0">
-            <div class="card-premium flex-1 bg-white dark:bg-gray-900 border border-bgrimm-shade1 dark:border-gray-800 shadow-sm">
+        <div class="lg:col-span-2 flex flex-col gap-4 lg:gap-6 min-h-0 lg:overflow-y-auto pr-0 lg:pr-2">
+            <div class="card-premium flex-1 bg-white dark:bg-gray-900 border border-bgrimm-shade1 dark:border-gray-800 shadow-sm min-h-[300px] lg:min-h-0">
                 <div class="flex justify-between items-start mb-2 shrink-0">
                     <div>
                         <h2 class="text-base font-semibold dark:text-white">Readiness Level</h2>
@@ -158,7 +159,7 @@
                 <div class="chart-container"><canvas id="levelChart"></canvas></div>
             </div>
 
-            <div class="card-premium flex-1 bg-white dark:bg-gray-900 border border-bgrimm-shade1 dark:border-gray-800 shadow-sm">
+            <div class="card-premium flex-1 bg-white dark:bg-gray-900 border border-bgrimm-shade1 dark:border-gray-800 shadow-sm min-h-[300px] lg:min-h-0">
                 <div class="mb-2 shrink-0">
                     <h2 class="text-base font-semibold dark:text-white">The 4 Houses</h2>
                     <p class="text-xs text-bgrimm-lightGrey dark:text-gray-400">สัดส่วนบุคลิกภาพของคลาส</p>
@@ -167,22 +168,24 @@
             </div>
         </div>
 
-        <div class="flex flex-col gap-4 lg:gap-6 min-h-0">
-            <div class="card-premium shrink-0 flex flex-col justify-center items-center text-center relative overflow-hidden bg-white dark:bg-gray-900 border border-bgrimm-shade1 dark:border-gray-800 shadow-sm py-6">
-                <div class="absolute -right-6 -top-6 w-24 h-24 bg-bgrimm-shade0 dark:bg-bgrimm-orange/10 rounded-full blur-2xl"></div>
-                <h2 class="text-xs font-medium text-bgrimm-lightGrey dark:text-gray-400 mb-1 uppercase tracking-wider">Advanced Users</h2>
-                <span id="adv-usage-percent" class="text-5xl font-bold text-bgrimm-darkGrey dark:text-white leading-none my-1">0%</span>
-                <p class="text-[10px] text-bgrimm-lightGrey dark:text-gray-400 mt-1">ใช้งาน GenAI เป็นประจำ <strong class="text-bgrimm-orange font-medium">ทุกวัน</strong></p>
+        <div class="flex flex-col gap-4 lg:gap-6 min-h-0 lg:overflow-y-auto pr-0 lg:pr-2">
+            <div class="grid grid-cols-2 lg:grid-cols-1 gap-4 lg:gap-6">
+                <div class="card-premium shrink-0 flex flex-col justify-center items-center text-center relative overflow-hidden bg-white dark:bg-gray-900 border border-bgrimm-shade1 dark:border-gray-800 shadow-sm py-4 lg:py-6">
+                    <div class="absolute -right-6 -top-6 w-24 h-24 bg-bgrimm-shade0 dark:bg-bgrimm-orange/10 rounded-full blur-2xl"></div>
+                    <h2 class="text-[10px] lg:text-xs font-medium text-bgrimm-lightGrey dark:text-gray-400 mb-1 uppercase tracking-wider">Advanced</h2>
+                    <span id="adv-usage-percent" class="text-3xl lg:text-5xl font-bold text-bgrimm-darkGrey dark:text-white leading-none my-1">0%</span>
+                    <p class="text-[9px] lg:text-[10px] text-bgrimm-lightGrey dark:text-gray-400 mt-1">ใช้งาน <strong class="text-bgrimm-orange font-medium">ทุกวัน</strong></p>
+                </div>
+
+                <div class="card-premium shrink-0 flex flex-col justify-center items-center text-center relative overflow-hidden bg-white dark:bg-gray-900 border border-bgrimm-shade1 dark:border-gray-800 shadow-sm py-4 lg:py-6">
+                    <div class="absolute -left-6 -bottom-6 w-24 h-24 bg-bgrimm-shade0 dark:bg-gray-500/10 rounded-full blur-2xl"></div>
+                    <h2 class="text-[10px] lg:text-xs font-medium text-bgrimm-lightGrey dark:text-gray-400 mb-1 uppercase tracking-wider">Beginners</h2>
+                    <span id="beginner-percent" class="text-3xl lg:text-5xl font-bold text-bgrimm-darkGrey dark:text-white leading-none my-1">0%</span>
+                    <p class="text-[9px] lg:text-[10px] text-bgrimm-lightGrey dark:text-gray-400 mt-1">ระดับ <strong class="text-bgrimm-lightGrey font-medium">AI Newbie</strong></p>
+                </div>
             </div>
 
-            <div class="card-premium shrink-0 flex flex-col justify-center items-center text-center relative overflow-hidden bg-white dark:bg-gray-900 border border-bgrimm-shade1 dark:border-gray-800 shadow-sm py-6">
-                <div class="absolute -left-6 -bottom-6 w-24 h-24 bg-bgrimm-shade0 dark:bg-gray-500/10 rounded-full blur-2xl"></div>
-                <h2 class="text-xs font-medium text-bgrimm-lightGrey dark:text-gray-400 mb-1 uppercase tracking-wider">Beginners</h2>
-                <span id="beginner-percent" class="text-5xl font-bold text-bgrimm-darkGrey dark:text-white leading-none my-1">0%</span>
-                <p class="text-[10px] text-bgrimm-lightGrey dark:text-gray-400 mt-1">กลุ่มผู้เริ่มต้นในระดับ <strong class="text-bgrimm-lightGrey font-medium">AI Newbie</strong></p>
-            </div>
-
-            <div class="card-premium flex-1 flex flex-col bg-white dark:bg-gray-900 border border-bgrimm-shade1 dark:border-gray-800 shadow-sm">
+            <div class="card-premium flex-1 flex flex-col bg-white dark:bg-gray-900 border border-bgrimm-shade1 dark:border-gray-800 shadow-sm min-h-[250px] lg:min-h-0">
                 <div class="mb-3 shrink-0">
                     <h2 class="text-base font-semibold dark:text-white">Live Feed</h2>
                     <p class="text-xs text-bgrimm-lightGrey dark:text-gray-400">ผู้เข้าสู่ศูนย์กลาง 5 คนล่าสุด</p>
@@ -196,6 +199,7 @@
     </main>
 
     <script>
+        // โค้ด JavaScript เดิม (ไม่เปลี่ยนแปลง)
         const firebaseConfig = {
             apiKey: "AIzaSyCkX9MvMmg2ewA9fdOK7rOWFCeljsTGF-I",
             authDomain: "notebooklm-f38c2.firebaseapp.com",
